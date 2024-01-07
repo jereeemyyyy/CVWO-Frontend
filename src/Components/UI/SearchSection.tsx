@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Box, TextField } from "@mui/material";
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchBar";
 
 const SearchSection: React.FC = () => {
     return (
