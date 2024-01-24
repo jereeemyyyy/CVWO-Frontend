@@ -10,7 +10,7 @@ const FilterButton: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 16 }}>
       {/* Other components */}
       <DropdownButton options={options} onOptionSelect={handleOptionSelect} />
       {/* Other components */}

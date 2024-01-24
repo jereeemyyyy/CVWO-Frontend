@@ -1,21 +1,45 @@
-import React from "react";
-import { Typography, Box, TextField } from "@mui/material";
-import SearchBar from "../SearchBar";
+// SearchSection.tsx
+import React, { useState } from "react";
+import { Box, Grid } from "@mui/material";
+import SearchBar from "./SearchBar";
+import CreatePostButton from "../Buttons/CreatePostButton";
 
-const SearchSection: React.FC = () => {
-    return (
-        <Box 
-            sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-        >
-         <SearchBar />   
-        </Box>
-    );
+interface PostData {
+    post_id: number;
+    title: string;
+    content: string;
+    user_id: number;
+    created_at: string;
+    username: string;
+    likes: number;
+    comments: number;
+  }
+
+interface SearchSectionProps {
+  posts: PostData[];
+  onSearch: (query: string) => void;
 }
 
+const SearchSection: React.FC<SearchSectionProps> = ({ posts, onSearch }) => {
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between', // Add this to space the items
+        marginBottom: 2, // Add margin for separation
+      }}
+    >
+      {/* Search bar */}
+      <SearchBar onSearch={onSearch} width="80%" />
+      
+      {/* "Create Post" button */}
+      <CreatePostButton onCreatePost={(title, content) => console.log(title, content)} />
+      
+      {/* You can add additional filter options here if needed */}
+    </Box>
+  );
+};
 
 export default SearchSection;
