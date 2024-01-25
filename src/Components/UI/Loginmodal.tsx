@@ -10,6 +10,7 @@ interface LoginModalProps {
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   const [loginSuccess, setLoginSuccess] = useState(false);
 
+  // Login logic. Once successful, dialog closes and page refreshes
   const handleLoginSuccess = () => {
     setLoginSuccess(true);
     onClose();

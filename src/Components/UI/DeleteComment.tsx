@@ -13,8 +13,10 @@ interface DeleteCommentProps {
 }
 
 const DeleteComment: React.FC<DeleteCommentProps> = ({ commentId, onDelete, onClose, open }) => {
+  
+  // Delete comment logic
   const handleDelete = async () => {
-    // Perform the deletion logic (e.g., send a request to your server)
+  
     try {
       const authToken = localStorage.getItem('authToken');
 

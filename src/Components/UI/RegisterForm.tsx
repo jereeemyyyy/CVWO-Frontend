@@ -50,11 +50,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
           window.location.reload()
         } else {
-          // Handle login failure, show an error message, etc.
+          // Handle login failure then shows an error message
           console.error('Login after registration failed');
         }
       } else {
-        // Handle registration failure, show an error message, etc.
+        // Handle registration failure then shows an error message
         console.error('Registration failed');
       }
     } catch (error) {

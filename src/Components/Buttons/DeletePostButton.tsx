@@ -10,21 +10,22 @@ interface DeletePostButtonProps {
 const DeletePostButton: React.FC<DeletePostButtonProps> = ({ postId, onDelete }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  // Delete Button logic
   const handleDeleteClick = () => {
     setDeleteDialogOpen(true);
+
   };
 
+  // Close dialog logic
   const handleClose = () => {
     setDeleteDialogOpen(false);
   };
 
+  // Delete post logic
   const handlePostDelete = async () => {
-    // Implement your logic before calling onDelete
     console.log('Performing pre-delete actions');
 
-    // You can choose to proceed with the deletion or not based on your logic
-
-    // If you want to proceed, call onDelete to trigger the actual deletion
+    // Triggering actual deletion
     onDelete();
 
     // Close the dialog

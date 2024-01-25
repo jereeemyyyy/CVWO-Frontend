@@ -39,21 +39,20 @@ const PostWall: React.FC = () => {
     fetchPosts();
   }, []);
 
+  // Retrieve the JWT token from local storage
   const authToken = localStorage.getItem('authToken');
   
   var userID: number;
   
   if (authToken) {
-    // console.error('Authentication token not found');
-    // return <></>;
     const payload = JSON.parse(atob(authToken.split('.')[1]));
     userID = payload.user_id;
   }
   
 
-
   const fetchPosts = async () => {
     try {
+      // Sends a request to backend to fetch data from posts
       const response = await fetch('http://0.0.0.0:8082/posts');
       if (response.ok) {
         const data: PostData[] = await response.json();
@@ -82,6 +81,7 @@ const PostWall: React.FC = () => {
   const fetchLikes = async (postsData: PostData[]) => {
     try {
       const promises = postsData.map(async (post) => {
+        // Sends a request to backend to fetch data from likes
         const response = await fetch(`http://0.0.0.0:8082/likecount/${post.post_id}`);
         if (response.ok) {
           const likesCount = await response.json();
@@ -103,6 +103,7 @@ const PostWall: React.FC = () => {
     }
   };
 
+  // Clicking of post logic
   const handlePostClick = (post: PostData) => {
     console.log('Clicked post:', post); // Add this line for debugging
   
@@ -118,10 +119,10 @@ const PostWall: React.FC = () => {
     setShowComments(true);
   };
 
+  // Logic for liking a post
   const handleLikeClick = async (post: PostData) => {
     try {
-      // Retrieve the JWT token from local storage
-
+      
       // Check if the user has already liked the post
       const hasLiked = post.likedBy.includes(userID);
   
@@ -144,8 +145,7 @@ const PostWall: React.FC = () => {
       setPosts(updatedPosts);
       setFilteredPosts(updatedPosts);
   
-      // Make a request to the backend endpoint to handle the like
-      
+      // Make a request to the backend to fetch data from likes
       const response = await fetch(`http://0.0.0.0:8082/likes`, {
         method: method,
         headers: {
@@ -159,7 +159,7 @@ const PostWall: React.FC = () => {
       });
   
       if (response.ok) {
-        // Update the local state to reflect the like
+        //Update the local state to reflect the like
         // const updatedPosts = posts.map((p) =>
         //   p.post_id === post.post_id ? { ...p, likedBy: updatedLikedBy } : p
         // );
@@ -173,12 +173,13 @@ const PostWall: React.FC = () => {
     }
   };
   
-
+  // Closes the dialog
   const handleCloseDialog = () => {
     setSelectedPost(null);
     setShowComments(false);
   };
 
+  // Logic for the seach bar
   const handleSearch = (query: string) => {
     const lowercasedQuery = query.toLowerCase();
     const filtered = posts.filter(
@@ -190,23 +191,16 @@ const PostWall: React.FC = () => {
     setFilteredPosts(filtered);
   };
 
+  // Logic for deleting a post
   const handlePostDelete = async () => {
     try {
       if (postToDelete) {
-        const postToDeleteInfo = posts.find((post) => post.post_id === postToDelete);
   
-        if (postToDeleteInfo && postToDeleteInfo.user_id !== userInfo?.user_id) {
-          console.error('Unauthorized: You cannot delete posts created by other users.');
-          return;
-        }
-  
-        // ... (existing post deletion logic)
-  
-        // Update your state or refetch posts to reflect the deletion
-        await fetchPosts(); // Assuming you have a fetchPosts function that fetches posts
+        await fetchPosts(); 
   
         // Close the delete dialog after the post is deleted
         setDeleteDialogOpen(false);
+        console.log(79);
         handleCloseDialog(); // This will close the post dialog
       }
     } catch (error) {

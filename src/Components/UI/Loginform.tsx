@@ -35,6 +35,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
         // Store the token in localStorage
         localStorage.setItem('authToken', token);
         // Call the onSuccess callback to update the UI or perform other actions
+        
         onSuccess();
       } else {
         // Handle authentication failure, show an error message

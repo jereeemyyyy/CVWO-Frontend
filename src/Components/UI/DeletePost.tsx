@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 
 interface DeletePostProps {
@@ -10,11 +10,12 @@ interface DeletePostProps {
 const DeletePost: React.FC<DeletePostProps> = ({ postId, onDelete, onClose }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Delete Post logic
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
 
-      // Make a request to the backend to delete the post
+      //
       const authToken = localStorage.getItem('authToken');
 
       if (!authToken) {
@@ -42,6 +43,8 @@ const DeletePost: React.FC<DeletePostProps> = ({ postId, onDelete, onClose }) =>
     } finally {
       setIsDeleting(false);
       onClose();
+      
+
     }
   };
 

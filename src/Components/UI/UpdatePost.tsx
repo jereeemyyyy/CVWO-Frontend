@@ -13,16 +13,12 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ postId, currentContent, userId,
   const [newContent, setNewContent] = useState(currentContent);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    // Additional logic can be added here if needed when the component mounts
-  }, []);
-
   const handleUpdate = async () => {
     try {
       setIsUpdating(true);
 
       // Check if the user ID matches the post creator's ID
-      if (userId === 0/* Retrieve post creator's ID */) {
+      if (userId === 0) {
         // User is authorized to update the post
         // Make a request to the backend to update the post content
         const authToken = localStorage.getItem('authToken');
@@ -83,7 +79,7 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ postId, currentContent, userId,
           onChange={(e) => setNewContent(e.target.value)}
         />
         {/* Check if user is authorized before rendering the update button */}
-        {userId === 0/* Retrieve post creator's ID */ && (
+        {userId === 0 && (
           <Button onClick={handleUpdate} disabled={isUpdating} color="primary">
             {isUpdating ? 'Updating...' : 'Update'}
           </Button>

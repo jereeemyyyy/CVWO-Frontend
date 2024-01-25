@@ -38,7 +38,6 @@ const SearchSection: React.FC<SearchSectionProps> = ({ posts, onSearch }) => {
       {/* "Create Post" button */}
       <CreatePostButton onCreatePost={(title, content) => console.log(title, content)} />
       
-      {/* You can add additional filter options here if needed */}
     </Box>
   );
 };

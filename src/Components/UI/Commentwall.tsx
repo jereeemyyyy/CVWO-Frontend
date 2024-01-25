@@ -42,15 +42,14 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     fetchComments();
   }, [post_id]);
 
+  // Submit comment Logic
   const handleSubmitComment = async () => {
     try {
       
-
         if (!authToken) {
           console.error('Authentication token not found');
           return;
         }
-
 
       const response = await fetch(`http://0.0.0.0:8082/createcomment`, {
         method: 'POST',
@@ -84,11 +83,9 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     setDeleteDialogOpen(true);
   };
 
+  // Logic to delete coomment
   const handleConfirmDelete = async () => {
-    // Logic to delete the comment and update the UI
     try {
-      // Perform any additional logic before deletion if needed
-
       // Close the delete confirmation dialog
       setDeleteDialogOpen(false);
 
@@ -104,6 +101,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     onClose(); // Close the comment dialog
   };
 
+  // To format date to Singapore's Time
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -112,6 +110,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric',
+      timeZone: 'Asia/Singapore',
     };
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
@@ -126,7 +125,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
             <Typography variant="caption" color="text.secondary">
             Posted by {comment.username} at {formatDate(comment.created_at)}
             </Typography>
-            {comment.user_id === payload.user_id && (  // Show delete button only for the comment creator
+            {payload && comment.user_id === payload.user_id && (
               <Button onClick={() => handleDeleteComment(comment.comment_id)} variant="outlined" color="secondary">
                 Delete Comment
               </Button>
@@ -135,7 +134,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     ))}
 
       {/* Add a form to submit new comments */}
-      <form onSubmit={(e) => { e.preventDefault(); handleSubmitComment(); }}>
+      {(authToken && <form onSubmit={(e) => { e.preventDefault(); handleSubmitComment(); }}>
         <TextField
           label="Add a comment"
           multiline
@@ -149,16 +148,16 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
         <Button type="submit" variant="contained" color="primary">
           Post Comment
         </Button>
-      </form>
+      </form>)}
 
-       {/* Delete Comment Dialog */}
+       {/* Deletes a Comment Dialog */}
        
-        <DeleteComment
+      <DeleteComment
         commentId={selectedCommentId || 0} // Pass the selected comment id (default to 0 if null)
         onDelete={handleConfirmDelete} // Callback to handle actual deletion logic
         onClose={() => setDeleteDialogOpen(false)} // Callback to close the dialog
         open={isDeleteDialogOpen} // Control the visibility of the dialog
-        />
+       />
 
       {/* Add a button to close the CommentWall */}
       <Button onClick={handleClose} variant="outlined" color="secondary">

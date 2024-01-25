@@ -5,11 +5,12 @@ import Loginmodal from "./Loginmodal";
 const Header: React.FC = () => {
 const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const authToken = localStorage.getItem("authToken");
-
+  
+  // Logout logic
   const handleLogout = () => {
-    // Implement your logout logic here
+    
     localStorage.removeItem("authToken");
-    // Optionally, you can perform additional cleanup or redirect the user.
+    
     window.location.reload(); // Refresh the page after logout
   };
 

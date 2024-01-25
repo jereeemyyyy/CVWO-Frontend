@@ -9,7 +9,8 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
-
+  // Retrive the JWT token from localstorage
+  const authToken = localStorage.getItem('authToken');
 
   const handleOpen = () => {
     setOpen(true);
@@ -21,9 +22,7 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
 
   const handleCreatePost = async () => {
     try {
-      // Retrive the JWT token from localstorage
-      const authToken = localStorage.getItem('authToken')
-
+      
       if (!authToken) {
         console.error('Authentication token not found');
         return;
@@ -52,7 +51,6 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
         window.location.reload();
       } else {
         console.error('Failed to create post:', response.statusText);
-        // Handle error or provide user feedback
       }
     } catch (error) {
       console.error('Error:', error);
@@ -61,11 +59,11 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      {(authToken &&<Button variant="contained" color="primary" onClick={handleOpen}>
         Create Post
-      </Button>
+      </Button> )}
 
-      <Dialog open={open} onClose={handleClose}>
+       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create a New Post</DialogTitle>
         <DialogContent>
           <TextField
@@ -96,7 +94,7 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
             Create
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> 
     </div>
   );
 };
