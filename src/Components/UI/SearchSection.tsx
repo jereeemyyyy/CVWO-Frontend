@@ -12,7 +12,8 @@ interface PostData {
     created_at: string;
     username: string;
     likes: number;
-    comments: number;
+    comment_count: number;
+    
   }
 
 interface SearchSectionProps {

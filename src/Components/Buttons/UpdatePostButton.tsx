@@ -11,10 +11,9 @@ interface UpdatePostButtonProps {
 
 const UpdatePostButton: React.FC<UpdatePostButtonProps> = ({ postId, currentContent, onUpdate }) => {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
-  const [content, setContent] = useState('');
+ 
 
   const handleUpdateClick = () => {
-    setContent('');
     setUpdateDialogOpen(true);
   };
 

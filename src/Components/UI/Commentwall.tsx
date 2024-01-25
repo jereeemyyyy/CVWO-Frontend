@@ -69,6 +69,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
         // If the comment is successfully submitted, fetch the updated comments
         await fetchComments();
         setNewComment(''); // Clear the input field
+        
       } else {
         console.error('Error submitting comment:', response.statusText);
       }
@@ -98,6 +99,24 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     }
   };
 
+  const handleClose = async () => {
+    window.location.reload()
+    onClose(); // Close the comment dialog
+  };
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+  };
+
   return (
     <Container style={{ marginTop: '50px' }}>
       <Typography variant="h6">Comments</Typography>
@@ -105,7 +124,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
         <div key={comment.comment_id} style={{ border: '1px solid #ddd', padding: '10px', marginBottom: '10px' }}>
             <Typography variant="body1">{comment.comment_content}</Typography>
             <Typography variant="caption" color="text.secondary">
-            Posted by {comment.username} at {comment.created_at}
+            Posted by {comment.username} at {formatDate(comment.created_at)}
             </Typography>
             {comment.user_id === payload.user_id && (  // Show delete button only for the comment creator
               <Button onClick={() => handleDeleteComment(comment.comment_id)} variant="outlined" color="secondary">
@@ -142,7 +161,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
         />
 
       {/* Add a button to close the CommentWall */}
-      <Button onClick={onClose} variant="outlined" color="secondary">
+      <Button onClick={handleClose} variant="outlined" color="secondary">
         Close Comments
       </Button>
     </Container>

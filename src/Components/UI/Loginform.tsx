@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Link, FormControl, FormLabel } from '@mui/material';
+import { TextField, Button, Typography, FormControl, FormLabel } from '@mui/material';
 import RegisterForm from './RegisterForm';
 
 interface LoginFormProps {
@@ -10,6 +10,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,17 +37,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
         // Call the onSuccess callback to update the UI or perform other actions
         onSuccess();
       } else {
-        // Handle authentication failure, show an error message, etc.
+        // Handle authentication failure, show an error message
+        setError('Invalid username or password');
         console.error('Authentication failed');
       }
     } catch (error) {
+      setError('An error occurred. Please try again.');
       console.error('Error:', error);
     }
   };
 
   const handleToggleForm = () => {
-    setIsRegistering((prev) => !prev)
-  }
+    setIsRegistering((prev) => !prev);
+    setError(null); // Clear any previous error when switching between login and register forms
+  };
 
   return (
     <main>
@@ -101,6 +105,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
+            {error && (
+              <Typography variant="body2" color="error" sx={{ alignSelf: 'center' }}>
+                {error}
+              </Typography>
+            )}
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
               Log in
             </Button>

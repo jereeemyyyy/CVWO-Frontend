@@ -22,7 +22,7 @@ interface PostData {
   created_at: string;
   username: string;
   likes: number;
-  comments: number;
+  comment_count: number;
   likedBy: number[];
 }
 
@@ -64,6 +64,8 @@ const PostWall: React.FC = () => {
           likedBy: post.likedBy || [],
         }));
   
+        console.log(data);
+        console.log(postsWithLikes);
         const postsWithLikesCount = await fetchLikes(postsWithLikes);
         setPosts(postsWithLikesCount);
         setFilteredPosts(postsWithLikesCount);
@@ -123,7 +125,7 @@ const PostWall: React.FC = () => {
       // Check if the user has already liked the post
       const hasLiked = post.likedBy.includes(userID);
   
-      let method, updatedLikedBy: number[];
+      let method: string, updatedLikedBy: number[];
   
       if (hasLiked) {
         // If the user has liked the post, remove the like
@@ -134,10 +136,17 @@ const PostWall: React.FC = () => {
         method = 'POST';
         updatedLikedBy = [...post.likedBy, userID];
       }
+
+      // Optimistic UI update: Update the like count locally
+      const updatedPosts = posts.map((p) =>
+        p.post_id === post.post_id ? { ...p, likedBy: method === 'POST' ? updatedLikedBy : updatedLikedBy.filter((userId) => userId !== userID), likes: updatedLikedBy.length } : p
+        );
+      setPosts(updatedPosts);
+      setFilteredPosts(updatedPosts);
   
       // Make a request to the backend endpoint to handle the like
       
-      const response = await fetch(`http://0.0.0.0:8082/likes/${post.post_id}`, {
+      const response = await fetch(`http://0.0.0.0:8082/likes`, {
         method: method,
         headers: {
           'Content-Type': 'application/json',
@@ -151,11 +160,11 @@ const PostWall: React.FC = () => {
   
       if (response.ok) {
         // Update the local state to reflect the like
-        const updatedPosts = posts.map((p) =>
-          p.post_id === post.post_id ? { ...p, likedBy: updatedLikedBy } : p
-        );
-        setPosts(updatedPosts);
-        setFilteredPosts(updatedPosts);
+        // const updatedPosts = posts.map((p) =>
+        //   p.post_id === post.post_id ? { ...p, likedBy: updatedLikedBy } : p
+        // );
+        // setPosts(updatedPosts);
+        // setFilteredPosts(updatedPosts);
       } else {
         console.error('Failed to handle like:', response.statusText);
       }
@@ -205,6 +214,19 @@ const PostWall: React.FC = () => {
       // Handle error or provide user feedback
     }
   };
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+  };
   
 
 
@@ -223,7 +245,7 @@ const PostWall: React.FC = () => {
                   {post.content.slice(0, 80)}...
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  Posted by {post.username}
+                  Posted by {post.username} at {formatDate(post.created_at)}
                 </Typography>
                 <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
                   <IconButton color="primary" aria-label="like" onClick={() => handleLikeClick(post)}>
@@ -232,11 +254,11 @@ const PostWall: React.FC = () => {
                   <Typography variant="caption" color="text.secondary" style={{ marginRight: 16 }}>
                     {post.likes} Likes
                   </Typography>
-                  <IconButton color="primary" aria-label="reply">
+                  <IconButton onClick={() => handlePostClick(post)} color="primary" aria-label="reply">
                     <ChatIcon />
                   </IconButton>
                   <Typography variant="caption" color="text.secondary">
-                    {post.comments} Replies
+                    {post.comment_count} Replies
                   </Typography>
                   {(post.user_id == userID) && <UpdatePostButton
                     postId={post.post_id}
@@ -257,14 +279,16 @@ const PostWall: React.FC = () => {
       {/* Post Dialog */}
       <Dialog open={Boolean(selectedPost)} onClose={handleCloseDialog}>
         <DialogTitle>{selectedPost?.title}</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ position: 'relative' }}>
           <Typography variant="body1">{selectedPost?.content}</Typography>
           {/* Render comments here */}
           {showComments && (
             <CommentWall post_id={selectedPost?.post_id || 0} onClose={handleCloseDialog} />
           )}
           {postToDelete && (
-            <DeletePostButton postId={postToDelete} onDelete={handlePostDelete} />
+            <div style={{ position: 'absolute', bottom: 0, right: 0, margin: '16px' }}>
+              <DeletePostButton postId={postToDelete} onDelete={handlePostDelete} />
+            </div>
           )}
         </DialogContent>
       </Dialog>
