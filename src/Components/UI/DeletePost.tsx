@@ -23,7 +23,7 @@ const DeletePost: React.FC<DeletePostProps> = ({ postId, onDelete, onClose }) =>
         return;
       }
 
-      const response = await fetch(`http://0.0.0.0:8082/posts/${postId}`, {
+      const response = await fetch(`https://cvwo-backend-web-services.onrender.com/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

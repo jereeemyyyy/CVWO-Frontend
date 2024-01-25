@@ -14,7 +14,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   const handleRegistration = async () => {
     try {
       // Send a request to your backend to register the user
-      const response = await fetch('http://0.0.0.0:8082/register', {
+      const response = await fetch('https://cvwo-backend-web-services.onrender.com/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
       if (response.ok) {
         // If registration is successful, proceed with login
-        const loginResponse = await fetch('http://0.0.0.0:8082/login', {
+        const loginResponse = await fetch('https://cvwo-backend-web-services.onrender.com/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

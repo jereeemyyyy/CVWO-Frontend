@@ -25,7 +25,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`http://0.0.0.0:8082/getcommentsbypostid/${post_id}`);
+      const response = await fetch(`https://cvwo-backend-web-services.onrender.com/getcommentsbypostid/${post_id}`);
       if (response.ok) {
         const data = await response.json();
         setComments(data);
@@ -51,7 +51,7 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
           return;
         }
 
-      const response = await fetch(`http://0.0.0.0:8082/createcomment`, {
+      const response = await fetch(`https://cvwo-backend-web-services.onrender.com/createcomment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

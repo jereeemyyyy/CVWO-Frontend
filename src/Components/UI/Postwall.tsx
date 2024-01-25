@@ -53,7 +53,7 @@ const PostWall: React.FC = () => {
   const fetchPosts = async () => {
     try {
       // Sends a request to backend to fetch data from posts
-      const response = await fetch('http://0.0.0.0:8082/posts');
+      const response = await fetch('https://cvwo-backend-web-services.onrender.com/posts');
       if (response.ok) {
         const data: PostData[] = await response.json();
   
@@ -82,7 +82,7 @@ const PostWall: React.FC = () => {
     try {
       const promises = postsData.map(async (post) => {
         // Sends a request to backend to fetch data from likes
-        const response = await fetch(`http://0.0.0.0:8082/likecount/${post.post_id}`);
+        const response = await fetch(`https://cvwo-backend-web-services.onrender.com/likecount/${post.post_id}`);
         if (response.ok) {
           const likesCount = await response.json();
           return {
@@ -146,7 +146,7 @@ const PostWall: React.FC = () => {
       setFilteredPosts(updatedPosts);
   
       // Make a request to the backend to fetch data from likes
-      const response = await fetch(`http://0.0.0.0:8082/likes`, {
+      const response = await fetch(`https://cvwo-backend-web-services.onrender.com/likes`, {
         method: method,
         headers: {
           'Content-Type': 'application/json',

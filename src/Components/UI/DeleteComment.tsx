@@ -27,7 +27,7 @@ const DeleteComment: React.FC<DeleteCommentProps> = ({ commentId, onDelete, onCl
 
       const payload = JSON.parse(atob(authToken.split('.')[1]));
 
-      const response = await fetch(`http://0.0.0.0:8082/deletecomment/${commentId}`, {
+      const response = await fetch(`https://cvwo-backend-web-services.onrender.com/deletecomment/${commentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

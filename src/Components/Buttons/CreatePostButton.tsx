@@ -31,7 +31,7 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
       const payload = JSON.parse(atob(authToken.split('.')[1]));
       
       // Make a request to the backend to create a new post
-      const response = await fetch('http://0.0.0.0:8082/posts', {
+      const response = await fetch('https://cvwo-backend-web-services.onrender.com/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
