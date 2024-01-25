@@ -1,15 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Header from './Components/Header';
-import SearchSection from './Components/SearchSection';
+import Header from './Components/UI/Header';
+import FilterButton from './Components/Buttons/FilterButton';
+import Postwall from './Components/UI/Postwall';
+
+
 
 
 function App() {
   return (
     <div>
       <Header />
-      <SearchSection/>
+      <div style={{ marginTop: '20px' }}>
+        {/* Adjust the value of marginTop as needed */}
+        <Postwall />
+      </div>
     </div>
   );
 }

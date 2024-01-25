@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Link, FormControl, FormLabel } from '@mui/material';
+import RegisterForm from './RegisterForm';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -8,6 +9,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,64 +44,75 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     }
   };
 
+  const handleToggleForm = () => {
+    setIsRegistering((prev) => !prev);
+  };
+
   return (
     <main>
-      <form onSubmit={handleSubmit}>
-        <FormControl
-          sx={{
-            width: '300px',
-            mx: 'auto',
-            my: 0,
-            py: 0,
-            px: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-          }}
-          variant="outlined"
-        >
-          <div>
-            <Typography variant="h4" component="h1">
-              <b>Welcome!</b>
+      {isRegistering ? (
+        <RegisterForm onSuccess={onSuccess} />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <FormControl
+            sx={{
+              width: '300px',
+              mx: 'auto',
+              my: 0,
+              py: 0,
+              px: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              borderRadius: 'sm',
+              boxShadow: 'md',
+            }}
+            variant="outlined"
+          >
+            <div>
+              <Typography variant="h4" component="h1">
+                <b>Welcome!</b>
+              </Typography>
+              <Typography variant="body2">Sign in to continue.</Typography>
+            </div>
+            <FormControl>
+              <FormLabel>Username</FormLabel>
+              <TextField
+                name="username"
+                type="text"
+                placeholder="Your username"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Password</FormLabel>
+              <TextField
+                name="password"
+                type="password"
+                placeholder="Your password"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormControl>
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+              Log in
+            </Button>
+            <Typography variant="body2" sx={{ alignSelf: 'center' }}>
+              Don't have an account?{' '}
+              <Button size="small" variant="text" onClick={handleToggleForm}>
+                Sign up
+              </Button>
             </Typography>
-            <Typography variant="body2">Sign in to continue.</Typography>
-          </div>
-          <FormControl>
-            <FormLabel>Username</FormLabel>
-            <TextField
-              name="username"
-              type="text"
-              placeholder="Your username"
-              fullWidth
-              variant="outlined"
-              margin="dense"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
           </FormControl>
-          <FormControl>
-            <FormLabel>Password</FormLabel>
-            <TextField
-              name="password"
-              type="password"
-              placeholder="Your password"
-              fullWidth
-              variant="outlined"
-              margin="dense"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormControl>
-          <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
-            Log in
-          </Button>
-          <Typography variant="body2" sx={{ alignSelf: 'center' }}>
-            Don't have an account? <Button size='small' variant='text'>Sign up</Button>
-          </Typography>
-        </FormControl>
-      </form>
+        </form>
+      )}
     </main>
   );
 };
