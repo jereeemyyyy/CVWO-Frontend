@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -7,25 +7,38 @@ import Button from '@mui/material/Button';
 
 interface DeleteCommentProps {
   commentId: number;
-  onDelete: (commentId: number) => void;
+  onDelete: () => void;
   onClose: () => void;
+  open: boolean;
 }
 
-const DeleteComment: React.FC<DeleteCommentProps> = ({ commentId, onDelete, onClose }) => {
+const DeleteComment: React.FC<DeleteCommentProps> = ({ commentId, onDelete, onClose, open }) => {
   const handleDelete = async () => {
-    // You need to implement the actual deletion logic here
+    // Perform the deletion logic (e.g., send a request to your server)
     try {
+      const authToken = localStorage.getItem('authToken');
+
+      if (!authToken) {
+        console.error('Authentication token not found');
+        return;
+      }
+
+      const payload = JSON.parse(atob(authToken.split('.')[1]));
+
       const response = await fetch(`http://0.0.0.0:8082/deletecomment/${commentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          // Include any authorization headers if needed
+          'Authorization': `Bearer ${authToken}`,
         },
+        body: JSON.stringify({
+          user_id: payload.user_id,
+        }),
       });
 
       if (response.ok) {
         // If deletion is successful, call the onDelete callback
-        onDelete(commentId);
+        onDelete();
       } else {
         console.error('Error deleting comment:', response.statusText);
       }
@@ -38,7 +51,7 @@ const DeleteComment: React.FC<DeleteCommentProps> = ({ commentId, onDelete, onCl
   };
 
   return (
-    <Dialog open={true} onClose={onClose}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Delete Comment</DialogTitle>
       <DialogContent>
         <p>Are you sure you want to delete this comment?</p>

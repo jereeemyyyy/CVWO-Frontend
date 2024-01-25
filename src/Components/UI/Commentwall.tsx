@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button, Paper, Box } from '@mui/material';
+import DeleteComment from './DeleteComment';
 
 interface Comment {
   comment_id: number;
@@ -17,6 +18,10 @@ interface CommentWallProps {
 const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const authToken = localStorage.getItem('authToken');
+  const payload = authToken ? JSON.parse(atob(authToken.split('.')[1])) : null;
 
   const fetchComments = async () => {
     try {
@@ -39,14 +44,13 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
 
   const handleSubmitComment = async () => {
     try {
-      const authToken = localStorage.getItem('authToken');
+      
 
         if (!authToken) {
           console.error('Authentication token not found');
           return;
         }
 
-       const payload = JSON.parse(atob(authToken.split('.')[1]));
 
       const response = await fetch(`http://0.0.0.0:8082/createcomment`, {
         method: 'POST',
@@ -73,6 +77,27 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
     }
   };
 
+  const handleDeleteComment = (commentId: number) => {
+    // Set the selected comment for deletion and open the dialog
+    setSelectedCommentId(commentId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    // Logic to delete the comment and update the UI
+    try {
+      // Perform any additional logic before deletion if needed
+
+      // Close the delete confirmation dialog
+      setDeleteDialogOpen(false);
+
+      // Fetch the updated comments
+      await fetchComments();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <Container style={{ marginTop: '50px' }}>
       <Typography variant="h6">Comments</Typography>
@@ -82,6 +107,11 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
             <Typography variant="caption" color="text.secondary">
             Posted by {comment.username} at {comment.created_at}
             </Typography>
+            {comment.user_id === payload.user_id && (  // Show delete button only for the comment creator
+              <Button onClick={() => handleDeleteComment(comment.comment_id)} variant="outlined" color="secondary">
+                Delete Comment
+              </Button>
+            )}
         </div>
     ))}
 
@@ -101,6 +131,15 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
           Post Comment
         </Button>
       </form>
+
+       {/* Delete Comment Dialog */}
+       
+        <DeleteComment
+        commentId={selectedCommentId || 0} // Pass the selected comment id (default to 0 if null)
+        onDelete={handleConfirmDelete} // Callback to handle actual deletion logic
+        onClose={() => setDeleteDialogOpen(false)} // Callback to close the dialog
+        open={isDeleteDialogOpen} // Control the visibility of the dialog
+        />
 
       {/* Add a button to close the CommentWall */}
       <Button onClick={onClose} variant="outlined" color="secondary">

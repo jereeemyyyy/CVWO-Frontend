@@ -9,6 +9,10 @@ import SearchSection from './SearchSection';
 import DeletePostButton from '../Buttons/DeletePostButton';
 import UpdatePostButton from '../Buttons/UpdatePostButton';
 
+interface UserInfo {
+  user_id: number;
+  // Add other user-related fields if needed
+}
 
 interface PostData {
   post_id: number;
@@ -29,6 +33,7 @@ const PostWall: React.FC = () => {
   const [filteredPosts, setFilteredPosts] = useState<PostData[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<number | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     fetchPosts();
@@ -98,10 +103,17 @@ const PostWall: React.FC = () => {
 
   const handlePostClick = (post: PostData) => {
     console.log('Clicked post:', post); // Add this line for debugging
+  
+    if (post.user_id === userID) {
+      // Set the post to delete only if the current user is the creator
+      setPostToDelete(post.post_id);
+      setDeleteDialogOpen(true);
+    } else {
+      setPostToDelete(null);
+    }
+  
     setSelectedPost((prevSelectedPost) => (prevSelectedPost === post ? null : post));
     setShowComments(true);
-    setPostToDelete(post.post_id);
-    setDeleteDialogOpen(true);
   };
 
   const handleLikeClick = async (post: PostData) => {
@@ -171,19 +183,29 @@ const PostWall: React.FC = () => {
 
   const handlePostDelete = async () => {
     try {
-      // ... (existing post deletion logic)
-
-      // Update your state or refetch posts to reflect the deletion
-      await fetchPosts(); // Assuming you have a fetchPosts function that fetches posts
-
-      // Close the delete dialog after the post is deleted
-      setDeleteDialogOpen(false);
-      handleCloseDialog(); // This will close the post dialog
+      if (postToDelete) {
+        const postToDeleteInfo = posts.find((post) => post.post_id === postToDelete);
+  
+        if (postToDeleteInfo && postToDeleteInfo.user_id !== userInfo?.user_id) {
+          console.error('Unauthorized: You cannot delete posts created by other users.');
+          return;
+        }
+  
+        // ... (existing post deletion logic)
+  
+        // Update your state or refetch posts to reflect the deletion
+        await fetchPosts(); // Assuming you have a fetchPosts function that fetches posts
+  
+        // Close the delete dialog after the post is deleted
+        setDeleteDialogOpen(false);
+        handleCloseDialog(); // This will close the post dialog
+      }
     } catch (error) {
       console.error('Error deleting post:', error);
       // Handle error or provide user feedback
     }
   };
+  
 
 
   return (
