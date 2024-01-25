@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, IconButton, TextField } from '@mui/material';
+import { Typography, Button, Dialog, DialogTitle, DialogContent, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import UpdatePost from '../UI/UpdatePost';
 
@@ -11,8 +11,10 @@ interface UpdatePostButtonProps {
 
 const UpdatePostButton: React.FC<UpdatePostButtonProps> = ({ postId, currentContent, onUpdate }) => {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [content, setContent] = useState('');
 
   const handleUpdateClick = () => {
+    setContent('');
     setUpdateDialogOpen(true);
   };
 
@@ -24,6 +26,9 @@ const UpdatePostButton: React.FC<UpdatePostButtonProps> = ({ postId, currentCont
     <>
       <IconButton color="primary" aria-label="edit" onClick={handleUpdateClick}>
         <EditIcon />
+        <Typography variant="caption" color="text.secondary">
+            Edit
+        </Typography>
       </IconButton>
 
       {/* Update Post Dialog */}

@@ -13,7 +13,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   const handleLoginSuccess = () => {
     setLoginSuccess(true);
     onClose();
-    // You may perform additional actions upon successful login
+    window.location.reload();
   };
 
   return (

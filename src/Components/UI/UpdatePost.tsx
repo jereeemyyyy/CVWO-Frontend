@@ -64,6 +64,11 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ postId, currentContent, userId,
     }
   };
 
+  const handleClose = () => {
+    // Call the onClose callback to close the dialog
+    onClose();
+  };
+
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle>Update Post</DialogTitle>
@@ -83,7 +88,7 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ postId, currentContent, userId,
             {isUpdating ? 'Updating...' : 'Update'}
           </Button>
         )}
-        <Button onClick={onClose} disabled={isUpdating} color="secondary">
+        <Button onClick={handleClose} disabled={isUpdating} color="secondary">
           Cancel
         </Button>
       </DialogContent>

@@ -13,11 +13,6 @@ const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     window.location.reload(); // Refresh the page after logout
   };
 
-  const handleLoginSuccess = () => {
-    // You can perform additional actions upon successful login
-    setLoginModalOpen(false); // Close the login modal
-    window.location.reload(); // Refresh the page after login
-  };
 
   const handleLoginButtonClick = () => {
     // Open the login modal when the login button is clicked
