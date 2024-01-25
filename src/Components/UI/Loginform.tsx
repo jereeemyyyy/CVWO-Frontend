@@ -45,8 +45,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   };
 
   const handleToggleForm = () => {
-    setIsRegistering((prev) => !prev);
-  };
+    setIsRegistering((prev) => !prev)
+  }
 
   return (
     <main>
