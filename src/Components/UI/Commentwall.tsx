@@ -39,12 +39,26 @@ const CommentWall: React.FC<CommentWallProps> = ({ post_id, onClose }) => {
 
   const handleSubmitComment = async () => {
     try {
-      const response = await fetch(`http://0.0.0.0:8082/createcomment/${post_id}`, {
+      const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+          console.error('Authentication token not found');
+          return;
+        }
+
+       const payload = JSON.parse(atob(authToken.split('.')[1]));
+
+      const response = await fetch(`http://0.0.0.0:8082/createcomment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ comment_content: newComment }),
+        body: JSON.stringify({ 
+          comment_content: newComment,
+          user_id: payload.user_id,
+          post_id: post_id
+         }),
       });
 
       if (response.ok) {

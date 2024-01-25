@@ -22,6 +22,7 @@ const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const handleLoginButtonClick = () => {
     // Open the login modal when the login button is clicked
     setLoginModalOpen(true);
+    
   };
 
   const handleCloseLoginModal = () => {

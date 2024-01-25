@@ -7,6 +7,7 @@ import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import CommentWall from './Commentwall';
 import SearchSection from './SearchSection';
 import DeletePostButton from '../Buttons/DeletePostButton';
+import UpdatePostButton from '../Buttons/UpdatePostButton';
 
 
 interface PostData {
@@ -32,6 +33,19 @@ const PostWall: React.FC = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const authToken = localStorage.getItem('authToken');
+  
+  var userID: number;
+  
+  if (authToken) {
+    // console.error('Authentication token not found');
+    // return <></>;
+    const payload = JSON.parse(atob(authToken.split('.')[1]));
+    userID = payload.user_id;
+  }
+  
+
 
   const fetchPosts = async () => {
     try {
@@ -93,28 +107,20 @@ const PostWall: React.FC = () => {
   const handleLikeClick = async (post: PostData) => {
     try {
       // Retrieve the JWT token from local storage
-      const authToken = localStorage.getItem('authToken');
-  
-      if (!authToken) {
-        console.error('Authentication token not found');
-        return;
-      }
-      
-      const payload = JSON.parse(atob(authToken.split('.')[1]));
-  
+
       // Check if the user has already liked the post
-      const hasLiked = post.likedBy.includes(payload.user_id);
+      const hasLiked = post.likedBy.includes(userID);
   
       let method, updatedLikedBy: number[];
   
       if (hasLiked) {
         // If the user has liked the post, remove the like
         method = 'DELETE';
-        updatedLikedBy = post.likedBy.filter((userId) => userId !== payload.user_id);
+        updatedLikedBy = post.likedBy.filter((userId) => userId !== userID);
       } else {
         // If the user has not liked the post, add the like
         method = 'POST';
-        updatedLikedBy = [...post.likedBy, payload.user_id];
+        updatedLikedBy = [...post.likedBy, userID];
       }
   
       // Make a request to the backend endpoint to handle the like
@@ -127,7 +133,7 @@ const PostWall: React.FC = () => {
         },
         body: JSON.stringify({
           post_id: post.post_id,
-          user_id: payload.user_id,
+          user_id: userID,
         }),
       });
   
@@ -210,6 +216,15 @@ const PostWall: React.FC = () => {
                   <Typography variant="caption" color="text.secondary">
                     {post.comments} Replies
                   </Typography>
+                  {(post.user_id == userID) && <UpdatePostButton
+                    postId={post.post_id}
+                    currentContent={post.content}
+                    // userId= {userID}
+                    onUpdate={() => {
+                      // You can update the UI or perform other actions after updating
+                      fetchPosts(); // Assuming you have a fetchPosts function that fetches posts
+                    }}
+                  />}
                 </div>
               </CardContent>
             </Card>

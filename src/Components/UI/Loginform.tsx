@@ -96,7 +96,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
             Log in
           </Button>
           <Typography variant="body2" sx={{ alignSelf: 'center' }}>
-            Don't have an account? <Link href="/sign-up">Sign up</Link>
+            Don't have an account? <Button size='small' variant='text'>Sign up</Button>
           </Typography>
         </FormControl>
       </form>

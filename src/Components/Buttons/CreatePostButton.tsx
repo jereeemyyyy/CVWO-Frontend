@@ -49,6 +49,7 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({ onCreatePost }) => 
         // Notify the parent component about the new post
         onCreatePost(title, content);
         handleClose();
+        window.location.reload();
       } else {
         console.error('Failed to create post:', response.statusText);
         // Handle error or provide user feedback
